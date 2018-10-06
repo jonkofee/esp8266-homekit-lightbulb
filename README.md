@@ -1,4 +1,4 @@
-# ESP8266 HomeKit Server for ac remote control
+# ESP8266 HomeKit Server for lightbulb remote control
 
 ## Usage
 
@@ -91,8 +91,5 @@
         make -C examples/led monitor
     ```
 9. Pair your Iphone with ESP
-  
-## Schema
 
-![Schema](https://github.com/jonkofee/esp-8266-ac-remote-control/blob/master/schema.png)
   
