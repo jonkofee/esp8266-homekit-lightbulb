@@ -1,29 +1,16 @@
 #include <stdio.h>
-#include <espressif/esp_wifi.h>
-#include <espressif/esp_sta.h>
 #include <esp/uart.h>
 #include <esp8266.h>
 #include <FreeRTOS.h>
 #include <task.h>
-#include <button.h>
 
 #include <homekit/homekit.h>
 #include <homekit/characteristics.h>
-#include "wifi.h"
+#include <button.h>
+#include <wifi_config.h>
 
 homekit_value_t led_on_get();
 void led_on_set(homekit_value_t value);
-
-static void wifi_init() {
-    struct sdk_station_config wifi_config = {
-        .ssid = WIFI_SSID,
-        .password = WIFI_PASSWORD,
-    };
-
-    sdk_wifi_set_opmode(STATION_MODE);
-    sdk_wifi_station_set_config(&wifi_config);
-    sdk_wifi_station_connect();
-}
 
 const int led_gpio = 4;
 bool led_on = false;
@@ -120,11 +107,18 @@ homekit_server_config_t config = {
     .password = "111-11-111"
 };
 
+void on_wifi_ready() {
+    homekit_server_init(&config);
+}
+
+static void wifi_init() {
+    wifi_config_init("jonkofee", NULL, on_wifi_ready);
+}
+
 void user_init(void) {
     uart_set_baud(0, 115200);
 
     wifi_init();
     led_init();
     toogler_init();
-    homekit_server_init(&config);
 }

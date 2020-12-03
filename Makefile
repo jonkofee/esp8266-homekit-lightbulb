@@ -2,9 +2,11 @@ PROGRAM = ligthbulb
 
 EXTRA_COMPONENTS = \
 	extras/http-parser \
+	extras/dhcpserver \
 	$(abspath ./components/wolfssl) \
 	$(abspath ./components/cJSON) \
 	$(abspath ./components/homekit) \
+	$(abspath ./components/wifi_config) \
 	$(abspath ./components/button)
 
 FLASH_SIZE ?= 32
