@@ -23,7 +23,7 @@ static void wifi_init() {
 }
 
 const int led_gpio = 4;
-bool led_on = true;
+bool led_on = false;
 
 void led_write(bool on) {
     gpio_write(led_gpio, on ? 0 : 1);
