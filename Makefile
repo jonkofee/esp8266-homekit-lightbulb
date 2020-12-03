@@ -4,7 +4,8 @@ EXTRA_COMPONENTS = \
 	extras/http-parser \
 	$(abspath ./components/wolfssl) \
 	$(abspath ./components/cJSON) \
-	$(abspath ./components/homekit)
+	$(abspath ./components/homekit) \
+	$(abspath ./components/button)
 
 FLASH_SIZE ?= 32
 

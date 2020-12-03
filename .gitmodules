@@ -19,3 +19,6 @@
 [submodule "components/IRRemote"]
 	path = components/IRRemote
 	url = https://github.com/slawekkolodziej/irremote.git
+[submodule "components/button"]
+	path = components/button
+	url = https://github.com/maximkulkin/esp-button
