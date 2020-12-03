@@ -5,11 +5,14 @@
 #include <esp8266.h>
 #include <FreeRTOS.h>
 #include <task.h>
+#include <button.h>
 
 #include <homekit/homekit.h>
 #include <homekit/characteristics.h>
 #include "wifi.h"
 
+homekit_value_t led_on_get();
+void led_on_set(homekit_value_t value);
 
 static void wifi_init() {
     struct sdk_station_config wifi_config = {
@@ -25,6 +28,14 @@ static void wifi_init() {
 const int led_gpio = 4;
 bool led_on = false;
 
+homekit_characteristic_t lightbulb_characteristic = HOMEKIT_CHARACTERISTIC_(
+    ON, false,
+    .getter=led_on_get,
+    .setter=led_on_set
+);
+
+const int toogle_gpio = 0;
+
 void led_write(bool on) {
     gpio_write(led_gpio, on ? 0 : 1);
 }
@@ -32,6 +43,18 @@ void led_write(bool on) {
 void led_init() {
     gpio_enable(led_gpio, GPIO_OUTPUT);
     led_write(led_on);
+}
+void toggle_callback(bool high, void *context) {
+    led_on = !led_on;
+    led_write(led_on);
+
+    homekit_characteristic_notify(&lightbulb_characteristic, HOMEKIT_BOOL(led_on));
+}
+
+void toogler_init() {
+    if (toggle_create(toogle_gpio, toggle_callback, NULL)) {
+        printf("Failed to initialize a toggle\n");
+    }
 }
 
 void led_identify_task(void *_args) {
@@ -84,11 +107,7 @@ homekit_accessory_t *accessories[] = {
         }),
         HOMEKIT_SERVICE(LIGHTBULB, .primary=true, .characteristics=(homekit_characteristic_t*[]){
             HOMEKIT_CHARACTERISTIC(NAME, "Light"),
-            HOMEKIT_CHARACTERISTIC(
-                ON, false,
-                .getter=led_on_get,
-                .setter=led_on_set
-            ),
+            &lightbulb_characteristic,
             NULL
         }),
         NULL
@@ -106,5 +125,6 @@ void user_init(void) {
 
     wifi_init();
     led_init();
+    toogler_init();
     homekit_server_init(&config);
 }
