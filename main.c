@@ -21,7 +21,7 @@ homekit_characteristic_t lightbulb_characteristic = HOMEKIT_CHARACTERISTIC_(
     .setter=led_on_set
 );
 
-const int toogle_gpio = 0;
+const int toogle_gpio = 5;
 
 void led_write(bool on) {
     gpio_write(led_gpio, on ? 0 : 1);
